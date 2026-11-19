@@ -11,11 +11,38 @@ export const auth = betterAuth({
   user: {
     modelName: "users",
     additionalFields: {
-      // Step 2.2: the server will force this to customer or technician only.
-      role: { type: "string", required: false, defaultValue: "customer", input: true },
+      
+      // Better Auth does NOT check these values at runtime, so the hook below does.
+      // input: true is needed because the Sign Up page lets the user pick customer or technician.
+      role: {
+        type: ["customer", "technician", "admin"],
+        input: true,
+        required: false,
+        defaultValue: "customer",
+      },
       phone: { type: "string", required: false },
       area: { type: "string", required: false },
       bio: { type: "string", required: false },
+    },
+  },
+
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          // Only "technician" is allowed. Everything else becomes "customer".
+          const safeRole = user.role === "technician" ? "technician" : "customer";
+          return { data: { ...user, role: safeRole } };
+        },
+      },
+      update: {
+        before: async (data) => {
+          // Nobody can change role through Better Auth.
+          // Admin role changes go through the Express admin API.
+          const { role, ...rest } = data;
+          return { data: rest };
+        },
+      },
     },
   },
 
