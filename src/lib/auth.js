@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { jwt } from "better-auth/plugins";
 import { client, db } from "./db";
+import { createAuthMiddleware, APIError } from "better-auth/api";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
@@ -35,17 +36,17 @@ export const auth = betterAuth({
           return { data: { ...user, role: safeRole } };
         },
       },
-      update: {
-        before: async (data) => {
-          // Nobody can change role through Better Auth.
-          // Admin role changes go through the Express admin API.
-          const { role, ...rest } = data;
-          return { data: rest };
-        },
-      },
     },
   },
-
+hooks: {
+  before: createAuthMiddleware(async (ctx) => {
+    // Nobody can change their role through the update-user endpoint.
+    // Admin role changes go through the Express admin API.
+    if (ctx.path === "/update-user" && ctx.body && "role" in ctx.body) {
+      throw new APIError("BAD_REQUEST", { message: "Role cannot be changed here." });
+    }
+  }),
+},
   emailAndPassword: { enabled: true },
 
   plugins: [jwt()],
