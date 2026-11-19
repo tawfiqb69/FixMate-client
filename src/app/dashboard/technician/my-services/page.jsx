@@ -14,6 +14,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import Image from "next/image";
+import EditServiceDialog from "@/components/edit-service-dialog";
 
 const STATUS_STYLE = {
   pending: "bg-amber-100 text-amber-800",
@@ -26,6 +27,7 @@ export default function MyServicesPage() {
   const [loading, setLoading] = useState(true);
   const [toDelete, setToDelete] = useState(null); // service waiting for confirm
   const [deleting, setDeleting] = useState(false);
+  const [toEdit, setToEdit] = useState(null);
 
   useEffect(() => {
     apiFetch("/api/services/my")
@@ -137,14 +139,24 @@ export default function MyServicesPage() {
                       aria-label="Toggle availability"
                     />
                   </td>
+
                   <td className="p-2">
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => setToDelete(s)}
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setToEdit(s)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => setToDelete(s)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -179,6 +191,21 @@ export default function MyServicesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {toEdit && (
+        <EditServiceDialog
+          key={toEdit._id}
+          service={toEdit}
+          onClose={() => setToEdit(null)}
+          onSaved={(updated) => {
+            setServices((list) =>
+              list.map((s) =>
+                s._id === updated._id ? { ...s, ...updated } : s,
+              ),
+            );
+            setToEdit(null);
+          }}
+        />
+      )}
     </div>
   );
 }
