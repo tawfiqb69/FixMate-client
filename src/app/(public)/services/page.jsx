@@ -1,6 +1,10 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { Search } from "lucide-react";
 import ServiceCard from "@/components/service-card";
 import ServiceFilters from "@/components/service-filters";
+import SectionHeading from "@/components/home/section-heading";
+import { buttonVariants } from "@/components/ui/button";
 
 async function getServices(searchParams) {
   const query = new URLSearchParams();
@@ -26,28 +30,66 @@ export default async function ServicesPage({ searchParams }) {
   const services = await getServices(await searchParams);
 
   return (
-    <div className="mx-auto max-w-6xl p-6">
-      <h1 className="mb-4 text-2xl font-bold">Browse Services</h1>
+    <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <SectionHeading
+        as="h1"
+        eyebrow="Browse services"
+        title="Find the right technician"
+        description="Search approved repair services, filter by category or service mode, and sort by price."
+      />
 
-      <Suspense fallback={null}>
-        <ServiceFilters />
-      </Suspense>
+      <div className="mt-10">
+        <Suspense fallback={null}>
+          <ServiceFilters />
+        </Suspense>
+      </div>
 
-      {services === null ? (
-        <p className="rounded border p-8 text-center">
-          Could not load services. Please try again.
-        </p>
-      ) : services.length === 0 ? (
-        <p className="rounded border p-8 text-center">
-          No services match your search. Try changing the filters.
-        </p>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {services.map((s) => (
-            <ServiceCard key={s._id} service={s} />
-          ))}
-        </div>
-      )}
+      <div className="mt-8">
+        {services === null ? (
+          <div className="rounded-2xl border p-10 text-center">
+            <p className="font-medium">We could not load services.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Please check your connection and try again.
+            </p>
+            <Link
+              href="/services"
+              className={buttonVariants({ className: "mt-5" })}
+            >
+              Try Again
+            </Link>
+          </div>
+        ) : services.length === 0 ? (
+          <div className="rounded-2xl border p-10 text-center">
+            <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-accent text-primary">
+              <Search className="size-6" />
+            </span>
+            <p className="mt-4 font-medium">No services match your search.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try a different word or change the filters.
+            </p>
+            <Link
+              href="/services"
+              className={buttonVariants({
+                className:
+                  "mt-5 bg-brand-gradient text-white hover:opacity-90",
+              })}
+            >
+              Clear filters
+            </Link>
+          </div>
+        ) : (
+          <>
+            <p className="mb-5 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              {services.length} {services.length === 1 ? "service" : "services"} found
+            </p>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {services.map((s) => (
+                <ServiceCard key={s._id} service={s} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
