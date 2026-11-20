@@ -6,6 +6,12 @@ import ServiceFilters from "@/components/service-filters";
 import SectionHeading from "@/components/home/section-heading";
 import { buttonVariants } from "@/components/ui/button";
 
+export const metadata = {
+  title: "Browse Services | FixMate",
+  description:
+    "Search approved repair services for smartphones, laptops, AC, refrigerators, TVs, washing machines and electrical work.",
+};
+
 async function getServices(searchParams) {
   const query = new URLSearchParams();
   for (const key of ["search", "category", "serviceMode", "sort"]) {

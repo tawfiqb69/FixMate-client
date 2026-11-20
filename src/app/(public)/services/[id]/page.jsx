@@ -20,6 +20,17 @@ async function getService(id) {
   }
 }
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const service = await getService(id);
+  if (!service) return { title: "Service | FixMate" };
+  return {
+    title: `${service.title} | FixMate`,
+    description: service.description?.slice(0, 150),
+  };
+}
+
+
 export default async function ServiceDetailsPage({ params }) {
   const { id } = await params;
   const service = await getService(id);
