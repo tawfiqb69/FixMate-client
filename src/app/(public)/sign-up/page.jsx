@@ -3,11 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import AuthShell from "@/components/auth-shell";
+
+const roles = [
+  { value: "customer", hint: "I need a repair" },
+  { value: "technician", hint: "I offer repair services" },
+];
 
 function validate({ name, email, password }) {
   const errors = {};
@@ -57,60 +64,103 @@ export default function SignUpPage() {
   }
 
   return (
-    <main className="mx-auto max-w-md p-6">
-      <h1 className="mb-6 text-2xl font-bold">Create your account</h1>
-
-      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        <div className="space-y-1">
+    <AuthShell
+      title="Create your account"
+      subtitle="Join FixMate as a customer or a technician."
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link href="/sign-in" className="font-medium text-primary hover:underline">
+            Sign In
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        <div className="space-y-1.5">
           <Label htmlFor="name">Full Name</Label>
-          <Input id="name" name="name" value={form.name} onChange={handleChange} />
-          {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+          <Input
+            id="name"
+            name="name"
+            autoComplete="name"
+            value={form.name}
+            onChange={handleChange}
+          />
+          {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
-          {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={form.email}
+            onChange={handleChange}
+          />
+          {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" name="password" type="password" value={form.password} onChange={handleChange} />
-          {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            value={form.password}
+            onChange={handleChange}
+          />
+          {errors.password ? (
+            <p className="text-sm text-destructive">{errors.password}</p>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              At least 6 characters, with one uppercase and one lowercase letter.
+            </p>
+          )}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Label>I want to join as</Label>
           <div className="grid grid-cols-2 gap-3">
-            {["customer", "technician"].map((r) => (
+            {roles.map(({ value, hint }) => (
               <label
-                key={r}
-                className={`cursor-pointer rounded-lg border p-3 text-center capitalize ${
-                  form.role === r ? "border-black font-semibold" : "border-gray-300"
+                key={value}
+                className={`cursor-pointer rounded-xl border p-4 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring ${
+                  form.role === value
+                    ? "border-primary bg-accent"
+                    : "hover:border-primary/40"
                 }`}
               >
                 <input
                   type="radio"
                   name="role"
-                  value={r}
-                  checked={form.role === r}
+                  value={value}
+                  checked={form.role === value}
                   onChange={handleChange}
                   className="sr-only"
                 />
-                {r}
+                <span className="flex items-center justify-between">
+                  <span className="font-semibold capitalize">{value}</span>
+                  {form.role === value && <Check className="size-4 text-primary" />}
+                </span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  {hint}
+                </span>
               </label>
             ))}
           </div>
         </div>
 
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-10 w-full bg-brand-gradient text-white hover:opacity-90"
+        >
           {loading ? "Creating account..." : "Sign Up"}
         </Button>
       </form>
-
-      <p className="mt-4 text-sm">
-        Already have an account? <Link href="/sign-in" className="underline">Sign In</Link>
-      </p>
-    </main>
+    </AuthShell>
   );
 }

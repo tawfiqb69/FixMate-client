@@ -8,6 +8,7 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import AuthShell from "@/components/auth-shell";
 
 function validate({ email, password }) {
   const errors = {};
@@ -59,31 +60,54 @@ function SignInForm() {
   }
 
   return (
-    <main className="mx-auto max-w-md p-6">
-      <h1 className="mb-6 text-2xl font-bold">Sign in to FixMate</h1>
-
-      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        <div className="space-y-1">
+    <AuthShell
+      title="Welcome back"
+      subtitle="Sign in to manage your repairs, services and payments."
+      footer={
+        <>
+          New here?{" "}
+          <Link href="/sign-up" className="font-medium text-primary hover:underline">
+            Create an account
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
-          {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={form.email}
+            onChange={handleChange}
+          />
+          {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" name="password" type="password" value={form.password} onChange={handleChange} />
-          {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={form.password}
+            onChange={handleChange}
+          />
+          {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
         </div>
 
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-10 w-full bg-brand-gradient text-white hover:opacity-90"
+        >
           {loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
-
-      <p className="mt-4 text-sm">
-        New here? <Link href="/sign-up" className="underline">Create an account</Link>
-      </p>
-    </main>
+    </AuthShell>
   );
 }
 
