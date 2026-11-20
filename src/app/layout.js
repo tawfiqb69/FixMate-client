@@ -1,7 +1,7 @@
 import { Cormorant_Garamond, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import TempHeader from "@/components/temp-header";
+import Navbar from "@/components/navbar";
 import ThemeProvider from "@/components/theme-provider";
 
 const dmSans = DM_Sans({
@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <TempHeader />
+          <Navbar />
           {children}
           <Toaster position="top-center" />
         </ThemeProvider>
