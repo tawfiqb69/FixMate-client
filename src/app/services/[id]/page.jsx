@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
+import RequestRepair from "@/components/request-repair";
 
 async function getService(id) {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/services/${id}`,
-      { cache: "no-store" }
+      { cache: "no-store" },
     );
     if (res.status === 404) return undefined;
     if (!res.ok) return null;
@@ -52,10 +53,22 @@ export default async function ServiceDetailsPage({ params }) {
       <p className="mt-3">{service.description}</p>
 
       <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
-        <div><dt className="font-semibold">Starting price</dt><dd>${service.basePrice}</dd></div>
-        <div><dt className="font-semibold">Estimated duration</dt><dd>{service.estimatedDuration}</dd></div>
-        <div><dt className="font-semibold">Service mode</dt><dd>{service.serviceMode}</dd></div>
-        <div><dt className="font-semibold">Service area</dt><dd>{service.serviceArea}</dd></div>
+        <div>
+          <dt className="font-semibold">Starting price</dt>
+          <dd>${service.basePrice}</dd>
+        </div>
+        <div>
+          <dt className="font-semibold">Estimated duration</dt>
+          <dd>{service.estimatedDuration}</dd>
+        </div>
+        <div>
+          <dt className="font-semibold">Service mode</dt>
+          <dd>{service.serviceMode}</dd>
+        </div>
+        <div>
+          <dt className="font-semibold">Service area</dt>
+          <dd>{service.serviceArea}</dd>
+        </div>
       </dl>
 
       <div className="mt-6 flex items-center gap-3 rounded-lg border p-4">
@@ -74,14 +87,16 @@ export default async function ServiceDetailsPage({ params }) {
         )}
         <div>
           <p className="font-semibold">{tech.name}</p>
-          {tech.area && <p className="text-sm text-muted-foreground">{tech.area}</p>}
+          {tech.area && (
+            <p className="text-sm text-muted-foreground">{tech.area}</p>
+          )}
           {tech.bio && <p className="text-sm">{tech.bio}</p>}
         </div>
       </div>
 
-      <p className="mt-6 rounded border p-4 text-sm text-muted-foreground">
-        The Request Repair form comes in the next phase (Step 4.1).
-      </p>
+      <div className="mt-6">
+        <RequestRepair serviceId={String(service._id)} />
+      </div>
     </div>
   );
 }
