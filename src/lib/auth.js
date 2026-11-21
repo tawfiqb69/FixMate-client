@@ -7,6 +7,7 @@ import { createAuthMiddleware, APIError } from "better-auth/api";
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins: [process.env.BETTER_AUTH_URL].filter(Boolean),
   database: mongodbAdapter(db),
 
   user: {
