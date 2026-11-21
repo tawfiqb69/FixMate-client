@@ -21,12 +21,12 @@ The platform features three dedicated roles — **Customer, Technician, and Admi
 |---|---|
 | **Live Application** | [FixMate Client](https://fix-mate-client-tawny.vercel.app) |
 | **Backend API** | [FixMate Server](https://fix-mate-server-psi.vercel.app) |
-| **Server Repository** | [GitHub Repository](https://github.com/tawfiqb69/FixMate-client) |
-| **Client Repository** | [GitHub Repository](https://github.com/tawfiqb69/FixMate-server) |
+| **Client Repository** | [GitHub Repository](https://github.com/tawfiqb69/FixMate-client) |
+| **Server Repository** | [GitHub Repository](https://github.com/tawfiqb69/FixMate-server) |
 
 ---
 
-## 📸 Screenshots
+<!-- ## 📸 Screenshots
 
 <!-- Add your project screenshots here -->
 
@@ -42,7 +42,7 @@ The platform features three dedicated roles — **Customer, Technician, and Admi
 |---|---|
 | <!-- Add technician dashboard screenshot --> | <!-- Add Stripe screenshot --> |
 
----
+--- -->
 
 ## ✨ Features
 
@@ -181,6 +181,8 @@ Transaction Recorded
 - Vercel — Frontend and backend deployment
 - Git & GitHub — Version control and source code management
 
+**npm packages (client):** next, react, react-dom, tailwindcss, shadcn, @base-ui/react, better-auth, @better-auth/mongo-adapter, mongodb, sonner, recharts, next-themes, lucide-react, class-variance-authority, cn, tw-animate-css, @tailwindcss/turbopack, babel-plugin-react-compiler, eslint, eslint-config-next
+
 ---
 
 ## 🧪 Demo Credentials
@@ -189,10 +191,10 @@ Use the following accounts to explore the different dashboards.
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | `<ADMIN_EMAIL>` | `<ADMIN_PASSWORD>` |
-| Technician | `tech1@fixmate.com` | `<TECH1_PASSWORD>` |
-| Technician | `tech2@fixmate.com` | `<TECH2_PASSWORD>` |
-| Customer | `customer@fixmate.com` | `<CUSTOMER_PASSWORD>` |
+| Admin | `Admin@gmail.com` | `Admin@gmail.com` |
+| Technician | `tech1@fixmate.com` | `Test1234` |
+| Technician | `tech2@fixmate.com` | `Test1234` |
+| Customer | `customer@fixmate.com` | `Test1234` |
 
 **Stripe Test Card**
 
@@ -223,7 +225,7 @@ Make sure you have installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone YOUR_CLIENT_REPOSITORY_URL
+git clone https://github.com/tawfiqb69/FixMate-client.git
 cd fixmate-client
 ```
 
@@ -240,8 +242,8 @@ Create a `.env.local` file in the project root and configure the required enviro
 Use `.env.example` as your reference.
 
 ```env
-# Database
-MONGODB_URI=
+# Database (Better Auth)
+DB_URI=
 
 # Authentication
 BETTER_AUTH_SECRET=
@@ -250,16 +252,12 @@ BETTER_AUTH_URL=
 # Backend API
 NEXT_PUBLIC_API_URL=
 
-# Stripe
-STRIPE_SECRET_KEY=
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-STRIPE_WEBHOOK_SECRET=
-
-# Image Hosting
-IMGBB_API_KEY=
+# Optional (Google login)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
 
-> Environment variable names may vary depending on your project configuration. Always follow the actual `.env.example` file.
+
 
 ### 4. Start the Development Server
 
@@ -285,26 +283,23 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## 📁 Project Architecture
 
 ```text
-fixmate/
-│
-├── fixmate-client/
-│   ├── public/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── lib/
-│   │   └── ...
-│   ├── .env.example
-│   └── package.json
-│
-└── fixmate-server/
-    ├── routes/
-    ├── controllers/
-    ├── middleware/
-    ├── models/
-    ├── config/
-    └── ...
+fixmate-client/
+├── public/
+├── src/
+│   ├── app/        (public pages, dashboards, API route for Better Auth)
+│   ├── components/
+│   └── lib/
+├── .env.example
+└── package.json
+
+fixmate-server/
+├── index.js
+├── app.js
+├── config/
+├── middleware/
+├── routes/
+├── utils/
+└── .env.example
 ```
 
 *The directory structure above is illustrative. Refer to the respective repositories for the complete implementation.*
