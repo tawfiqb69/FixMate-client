@@ -161,3 +161,88 @@
     }
   }
 }
+
+/* ===== FixMate toasts: "HUD card" style ===== */
+[data-sonner-toaster] [data-sonner-toast][data-styled="true"] {
+  --toast-accent: #047857;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem 0.875rem 1.25rem;
+  border-radius: 0.875rem;
+  border: 1px solid var(--border, #e3e9e3);
+  background: var(--card, #ffffff);
+  color: var(--foreground, #17231c);
+  font-family: var(--font-dm-sans), sans-serif;
+  /* accent bar on the left + soft glow in the status color */
+  box-shadow:
+    inset 4px 0 0 0 var(--toast-accent),
+    0 14px 32px -14px color-mix(in srgb, var(--toast-accent) 55%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* status colors (kept different from the brand gradient) */
+[data-sonner-toast][data-type="success"] { --toast-accent: #059669; }
+[data-sonner-toast][data-type="error"]   { --toast-accent: #dc2626; }
+[data-sonner-toast][data-type="warning"] { --toast-accent: #d97706; }
+[data-sonner-toast][data-type="info"]    { --toast-accent: #2563eb; }
+[data-sonner-toast][data-type="loading"] { --toast-accent: #047857; }
+
+/* icon in a small tinted tile */
+[data-sonner-toast] [data-icon] {
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+  color: var(--toast-accent);
+  background: color-mix(in srgb, var(--toast-accent) 14%, transparent);
+}
+[data-sonner-toast] [data-icon] svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* tiny mono status label above the title */
+[data-sonner-toast] [data-content]::before {
+  display: block;
+  margin-bottom: 0.125rem;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--toast-accent);
+}
+[data-sonner-toast][data-type="success"] [data-content]::before { content: "Success"; }
+[data-sonner-toast][data-type="error"] [data-content]::before   { content: "Error"; }
+[data-sonner-toast][data-type="warning"] [data-content]::before { content: "Warning"; }
+[data-sonner-toast][data-type="info"] [data-content]::before    { content: "Info"; }
+[data-sonner-toast][data-type="loading"] [data-content]::before { content: "Working"; }
+
+[data-sonner-toast] [data-title] {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+[data-sonner-toast] [data-description] {
+  font-size: 0.8125rem;
+  color: var(--muted-foreground, #647067);
+}
+
+/* action button (for example "My Bookings") */
+[data-sonner-toast] [data-button] {
+  height: 1.75rem;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: linear-gradient(135deg, #064e3b, #047857);
+}
+[data-sonner-toast] [data-cancel] {
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sonner-toast] {
+    transition: none !important;
+  }
+}
