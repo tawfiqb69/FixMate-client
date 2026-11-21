@@ -1,15 +1,7 @@
 import { requireSession } from "@/lib/session";
-import Navbar from "@/components/navbar";
+import DashboardShell from "@/components/dashboard/dashboard-shell";
 
-// TEMPORARY: navbar only (no footer). Replaced by the real Dashboard Layout in Step 6.1.
-const DashboardLayout = async ({ children }) => {
+export default async function DashboardLayout({ children }) {
   await requireSession();
-  return (
-    <>
-      <Navbar />
-      <div className="flex-1">{children}</div>
-    </>
-  );
-};
-
-export default DashboardLayout;
+  return <DashboardShell>{children}</DashboardShell>;
+}
