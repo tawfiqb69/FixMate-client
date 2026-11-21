@@ -19,7 +19,11 @@ import { StatusBadge, PaymentBadge } from "@/components/status-badge";
 import PageHeader from "@/components/dashboard/page-header";
 
 function fmtDate(d) {
-  return new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(d).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function amountOf(b) {
@@ -32,6 +36,7 @@ export default function CustomerBookingsPage() {
   const [error, setError] = useState("");
   const [toCancel, setToCancel] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [payingId, setPayingId] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,9 +59,13 @@ export default function CustomerBookingsPage() {
     if (!toCancel) return;
     setBusy(true);
     try {
-      await apiFetch(`/api/bookings/${toCancel._id}/cancel`, { method: "PATCH" });
+      await apiFetch(`/api/bookings/${toCancel._id}/cancel`, {
+        method: "PATCH",
+      });
       setBookings((list) =>
-        list.map((b) => (b._id === toCancel._id ? { ...b, status: "cancelled" } : b))
+        list.map((b) =>
+          b._id === toCancel._id ? { ...b, status: "cancelled" } : b,
+        ),
       );
       toast.success("Booking cancelled");
       setToCancel(null);
@@ -67,8 +76,18 @@ export default function CustomerBookingsPage() {
     }
   }
 
-  function payNow() {
-    toast.info("Payment will be available soon");
+  async function payNow(b) {
+    setPayingId(b._id);
+    try {
+      const res = await apiFetch("/api/payments/create-checkout-session", {
+        method: "POST",
+        body: JSON.stringify({ bookingId: b._id }),
+      });
+      window.location.assign(res.data.url);
+    } catch (err) {
+      toast.error(err.message || "Could not start payment");
+      setPayingId(null);
+    }
   }
 
   function Actions({ b }) {
@@ -81,8 +100,13 @@ export default function CustomerBookingsPage() {
     }
     if (b.status === "completed" && b.paymentStatus === "unpaid") {
       return (
-        <Button size="sm" className="bg-brand-gradient text-white" onClick={payNow}>
-          Pay Now
+        <Button
+          size="sm"
+          className="bg-brand-gradient text-white"
+          onClick={() => payNow(b)}
+          disabled={payingId === b._id}
+        >
+          {payingId === b._id ? "Redirecting..." : "Pay Now"}
         </Button>
       );
     }
@@ -91,7 +115,13 @@ export default function CustomerBookingsPage() {
 
   function Thumb({ b }) {
     return b.serviceImage ? (
-      <Image src={b.serviceImage} alt="" width={48} height={48} className="size-12 shrink-0 rounded-lg object-cover" />
+      <Image
+        src={b.serviceImage}
+        alt=""
+        width={48}
+        height={48}
+        className="size-12 shrink-0 rounded-lg object-cover"
+      />
     ) : (
       <div className="size-12 shrink-0 rounded-lg bg-muted" />
     );
@@ -99,25 +129,35 @@ export default function CustomerBookingsPage() {
 
   return (
     <div>
-      <PageHeader title="My Bookings" description="Track your repair requests and pay for completed jobs." />
+      <PageHeader
+        title="My Bookings"
+        description="Track your repair requests and pay for completed jobs."
+      />
 
       {loading && (
         <div className="space-y-3" role="status" aria-label="Loading bookings">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-16 rounded-xl bg-muted motion-safe:animate-pulse" />
+            <div
+              key={n}
+              className="h-16 rounded-xl bg-muted motion-safe:animate-pulse"
+            />
           ))}
         </div>
       )}
 
       {!loading && error && (
-        <p className="rounded-xl border border-destructive/40 p-4 text-sm text-destructive">{error}</p>
+        <p className="rounded-xl border border-destructive/40 p-4 text-sm text-destructive">
+          {error}
+        </p>
       )}
 
       {!loading && !error && bookings.length === 0 && (
         <div className="flex flex-col items-center rounded-xl border bg-card p-10 text-center">
           <ClipboardList className="size-10 text-muted-foreground" />
           <h2 className="mt-3 text-lg font-semibold">No bookings yet</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Find a service and send your first repair request.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Find a service and send your first repair request.
+          </p>
           <Link href="/services" className={buttonVariants() + " mt-4"}>
             Browse Services
           </Link>
@@ -150,16 +190,24 @@ export default function CustomerBookingsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3">{b.technicianName}</td>
-                    <td className="whitespace-nowrap px-4 py-3">{fmtDate(b.preferredDate)}</td>
+                    <td className="whitespace-nowrap px-4 py-3">
+                      {fmtDate(b.preferredDate)}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       ${amountOf(b)}
                       <span className="block text-xs text-muted-foreground">
                         {b.status === "completed" ? "Final" : "Base"}
                       </span>
                     </td>
-                    <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
-                    <td className="px-4 py-3"><PaymentBadge status={b.paymentStatus} /></td>
-                    <td className="px-4 py-3"><Actions b={b} /></td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={b.status} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <PaymentBadge status={b.paymentStatus} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Actions b={b} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -174,7 +222,9 @@ export default function CustomerBookingsPage() {
                   <Thumb b={b} />
                   <div className="min-w-0">
                     <p className="truncate font-medium">{b.serviceTitle}</p>
-                    <p className="truncate text-sm text-muted-foreground">{b.technicianName}</p>
+                    <p className="truncate text-sm text-muted-foreground">
+                      {b.technicianName}
+                    </p>
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -182,7 +232,9 @@ export default function CustomerBookingsPage() {
                   <PaymentBadge status={b.paymentStatus} />
                 </div>
                 <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{fmtDate(b.preferredDate)}</span>
+                  <span className="text-muted-foreground">
+                    {fmtDate(b.preferredDate)}
+                  </span>
                   <span className="font-semibold">${amountOf(b)}</span>
                 </div>
                 <div className="mt-3">
@@ -194,19 +246,32 @@ export default function CustomerBookingsPage() {
         </>
       )}
 
-      <Dialog open={!!toCancel} onOpenChange={(open) => !open && setToCancel(null)}>
+      <Dialog
+        open={!!toCancel}
+        onOpenChange={(open) => !open && setToCancel(null)}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Cancel this request?</DialogTitle>
             <DialogDescription>
-              {toCancel ? `"${toCancel.serviceTitle}" will be cancelled. This cannot be undone.` : ""}
+              {toCancel
+                ? `"${toCancel.serviceTitle}" will be cancelled. This cannot be undone.`
+                : ""}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setToCancel(null)} disabled={busy}>
+            <Button
+              variant="outline"
+              onClick={() => setToCancel(null)}
+              disabled={busy}
+            >
               Keep it
             </Button>
-            <Button variant="destructive" onClick={confirmCancel} disabled={busy}>
+            <Button
+              variant="destructive"
+              onClick={confirmCancel}
+              disabled={busy}
+            >
               {busy ? "Cancelling..." : "Yes, cancel"}
             </Button>
           </DialogFooter>
