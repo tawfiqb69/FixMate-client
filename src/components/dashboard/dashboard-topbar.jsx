@@ -29,7 +29,7 @@ function makeCrumbs(pathname) {
       part
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ")
+        .join(" "),
     );
 }
 
@@ -48,7 +48,12 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
-      <button type="button" onClick={onOpenMobile} className={iconBtn + " lg:hidden"} aria-label="Open menu">
+      <button
+        type="button"
+        onClick={onOpenMobile}
+        className={iconBtn + " lg:hidden"}
+        aria-label="Open menu"
+      >
         <Menu className="size-5" />
       </button>
 
@@ -56,7 +61,12 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
         <ol className="flex items-center gap-1 overflow-hidden text-sm text-muted-foreground">
           {crumbs.map((c, i) => (
             <li key={i} className="flex min-w-0 items-center gap-1">
-              {i > 0 && <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />}
+              {i > 0 && (
+                <ChevronRight
+                  className="size-3.5 shrink-0"
+                  aria-hidden="true"
+                />
+              )}
               <span
                 className={
                   i === crumbs.length - 1
@@ -72,7 +82,11 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
         </ol>
       </nav>
 
-      <Link href="/" className={iconBtn + " sm:w-auto sm:gap-2 sm:px-3 sm:text-sm"} aria-label="Back to Home">
+      <Link
+        href="/"
+        className={iconBtn + " sm:w-auto sm:gap-2 sm:px-3 sm:text-sm"}
+        aria-label="Back to Home"
+      >
         <Home className="size-5 sm:size-4" />
         <span className="hidden sm:inline">Back to Home</span>
       </Link>
@@ -92,15 +106,27 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
           render={
             <button
               type="button"
-              className="flex items-center gap-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:rounded-xl md:py-1 md:pl-1 md:pr-3 md:hover:bg-muted"
               aria-label="Open user menu"
             />
           }
         >
-          <Avatar className="size-9">
+
+
+           <Avatar className="size-9">
             <AvatarImage src={user?.image || undefined} alt="" />
             <AvatarFallback>{(user?.name || "?").charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
+          <span className="hidden min-w-0 flex-col items-start gap-0.5 text-left md:flex">
+            <span className="max-w-36 truncate text-sm font-medium leading-none">
+              {user?.name}
+            </span>
+            <RoleBadge role={role} />
+          </span>
+
+
+
+
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuGroup>
@@ -110,7 +136,9 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
             </DropdownMenuLabel>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem render={<Link href="/dashboard/profile" />}>Update Profile</DropdownMenuItem>
+          <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
+            Update Profile
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
