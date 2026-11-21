@@ -3,7 +3,16 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Menu, Home, Sun, Moon, ChevronRight } from "lucide-react";
+import {
+  Menu,
+  Home,
+  Sun,
+  Moon,
+  ChevronRight,
+  ChevronDown,
+  User,
+  LogOut,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -21,6 +30,9 @@ import RoleBadge from "./role-badge";
 const iconBtn =
   "inline-flex size-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
+const capsuleBtn =
+  "inline-flex h-8 items-center justify-center gap-2 rounded-full px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
 function makeCrumbs(pathname) {
   return pathname
     .split("/")
@@ -29,8 +41,23 @@ function makeCrumbs(pathname) {
       part
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" "),
+        .join(" ")
     );
+}
+
+function RingAvatar({ user, size = "size-8" }) {
+  return (
+    <span className="rounded-full bg-brand-gradient p-0.5">
+      <span className="block rounded-full bg-background p-0.5">
+        <Avatar className={size}>
+          <AvatarImage src={user?.image || undefined} alt="" />
+          <AvatarFallback>
+            {(user?.name || "?").charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </span>
+    </span>
+  );
 }
 
 export default function DashboardTopbar({ role, user, onOpenMobile }) {
@@ -47,7 +74,7 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
       <button
         type="button"
         onClick={onOpenMobile}
@@ -62,10 +89,7 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
           {crumbs.map((c, i) => (
             <li key={i} className="flex min-w-0 items-center gap-1">
               {i > 0 && (
-                <ChevronRight
-                  className="size-3.5 shrink-0"
-                  aria-hidden="true"
-                />
+                <ChevronRight className="size-3.5 shrink-0" aria-hidden="true" />
               )}
               <span
                 className={
@@ -82,64 +106,80 @@ export default function DashboardTopbar({ role, user, onOpenMobile }) {
         </ol>
       </nav>
 
-      <Link
-        href="/"
-        className={iconBtn + " sm:w-auto sm:gap-2 sm:px-3 sm:text-sm"}
-        aria-label="Back to Home"
-      >
-        <Home className="size-5 sm:size-4" />
-        <span className="hidden sm:inline">Back to Home</span>
-      </Link>
+      {/* Quick actions capsule */}
+      <div className="flex items-center gap-0.5 rounded-full border bg-card p-1">
+        <Link href="/" className={capsuleBtn} aria-label="Back to Home">
+          <Home className="size-4" />
+          <span className="hidden sm:inline">Home</span>
+        </Link>
+        <span className="h-4 w-px bg-border" aria-hidden="true" />
+        <button
+          type="button"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          className={capsuleBtn + " w-8 px-0"}
+          aria-label="Toggle theme"
+        >
+          <Sun className="size-4 dark:hidden" />
+          <Moon className="hidden size-4 dark:block" />
+        </button>
+      </div>
 
-      <button
-        type="button"
-        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        className={iconBtn}
-        aria-label="Toggle theme"
-      >
-        <Sun className="size-5 dark:hidden" />
-        <Moon className="hidden size-5 dark:block" />
-      </button>
-
+      {/* Profile chip */}
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
             <button
               type="button"
-              className="flex items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:rounded-xl md:py-1 md:pl-1 md:pr-3 md:hover:bg-muted"
+              className="group flex items-center gap-2.5 rounded-full border bg-card p-1 transition-colors hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:pr-3"
               aria-label="Open user menu"
             />
           }
         >
-
-
-           <Avatar className="size-9">
-            <AvatarImage src={user?.image || undefined} alt="" />
-            <AvatarFallback>{(user?.name || "?").charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <span className="hidden min-w-0 flex-col items-start gap-0.5 text-left md:flex">
-            <span className="max-w-36 truncate text-sm font-medium leading-none">
+          <RingAvatar user={user} />
+          <span className="hidden min-w-0 flex-col items-start text-left md:flex">
+            <span className="max-w-32 truncate text-sm font-medium leading-tight">
               {user?.name}
             </span>
-            <RoleBadge role={role} />
+            <span className="font-mono text-[10px] uppercase leading-tight tracking-[0.14em] text-primary">
+              {role}
+            </span>
           </span>
-
-
-
-
+          <ChevronDown
+            className="hidden size-4 text-muted-foreground transition-transform group-aria-expanded:rotate-180 md:block"
+            aria-hidden="true"
+          />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
+
+        <DropdownMenuContent align="end" className="w-64 p-1.5">
           <DropdownMenuGroup>
-            <DropdownMenuLabel className="space-y-1">
-              <p className="truncate text-sm font-medium">{user?.name}</p>
-              <RoleBadge role={role} />
+            <DropdownMenuLabel className="mb-1 flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+              <RingAvatar user={user} size="size-10" />
+              <span className="min-w-0 space-y-1">
+                <span className="block truncate text-sm font-semibold">
+                  {user?.name}
+                </span>
+                <span className="block truncate text-xs font-normal text-muted-foreground">
+                  {user?.email}
+                </span>
+                <RoleBadge role={role} />
+              </span>
             </DropdownMenuLabel>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
+          <DropdownMenuItem
+            render={<Link href="/dashboard/profile" />}
+            className="gap-2"
+          >
+            <User className="size-4" />
             Update Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={handleSignOut}
+            className="gap-2 text-destructive"
+          >
+            <LogOut className="size-4" />
+            Sign Out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>
