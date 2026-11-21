@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ClipboardList, Hammer, CheckCircle2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { buildStatusData } from "@/lib/chart-data";
 import { buttonVariants } from "@/components/ui/button";
 import PageHeader from "@/components/dashboard/page-header";
 import StatsCard from "@/components/dashboard/stats-card";
+import CountChart from "@/components/dashboard/count-chart";
 
 const ACTIVE = ["requested", "accepted", "in-progress"];
 
@@ -51,6 +53,16 @@ export default function CustomerOverviewPage() {
         <StatsCard icon={ClipboardList} label="Total Requests" value={total} hint="All your repair requests" loading={loading} error={error} />
         <StatsCard icon={Hammer} label="Active Jobs" value={active} hint="Requested, accepted or in progress" loading={loading} error={error} />
         <StatsCard icon={CheckCircle2} label="Completed Jobs" value={completed} hint="Finished by technicians" loading={loading} error={error} />
+      </div>
+      <div className="mt-6">
+        <CountChart
+          title="My requests by status"
+          description="How your repair requests are moving."
+          data={buildStatusData(bookings)}
+          loading={loading}
+          error={error}
+          emptyText="No requests yet. Send your first repair request to see your chart."
+        />
       </div>
     </div>
   );
