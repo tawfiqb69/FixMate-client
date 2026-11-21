@@ -333,7 +333,7 @@ Building FixMate involved working with several real-world full-stack development
 Full-Stack Web Developer | CSE Student
 
 - GitHub: [@tawfiqb69](https://github.com/tawfiqb69)
-- Portfolio: [Visit Portfolio](YOUR_PORTFOLIO_URL)
+- Portfolio: [Visit Portfolio](https://sm-tawfiq-portfolio.vercel.app)
 - LinkedIn: [SM Tawfiq](https://www.linkedin.com/in/sm-tawfiq/)
 
 ---
