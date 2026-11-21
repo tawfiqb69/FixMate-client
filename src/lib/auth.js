@@ -1,13 +1,13 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { jwt } from "better-auth/plugins";
-import { client, db } from "./db";
+import { db } from "./db";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
-  database: mongodbAdapter(db, { client }),
+  database: mongodbAdapter(db),
 
   user: {
     modelName: "users",

@@ -6,7 +6,7 @@ if (!uri) throw new Error("Missing DB_URI in .env.local");
 const globalForMongo = globalThis;
 
 if (!globalForMongo._mongoClient) {
-  globalForMongo._mongoClient = new MongoClient(uri);
+  globalForMongo._mongoClient = new MongoClient(uri, { maxPoolSize: 5, maxIdleTimeMS: 30000 });
 }
 
 export const client = globalForMongo._mongoClient;

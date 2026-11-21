@@ -88,7 +88,7 @@ export default async function ServicesPage({ searchParams }) {
             <p className="mb-5 font-mono text-xs uppercase tracking-wider text-muted-foreground">
               {services.length} {services.length === 1 ? "service" : "services"} found
             </p>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 ">
               {services.map((s) => (
                 <ServiceCard key={s._id} service={s} />
               ))}
