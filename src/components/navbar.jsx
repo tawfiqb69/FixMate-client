@@ -110,16 +110,14 @@ export default function Navbar() {
             <span className="flex size-9 items-center justify-center rounded-full bg-brand-gradient text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]">
               <Wrench className="size-[18px]" />
             </span>
-            <span className="font-display text-2xl font-bold tracking-tight">
-              FixMate
+            <span className="font-display text-3xl font-bold tracking-tight">
+              <span className="text-foreground">Fix</span>
+              <span className="text-primary">Mate</span>
             </span>
           </Link>
 
           {/* Desktop links */}
-          <nav
-            aria-label="Main"
-            className="hidden items-center gap-1 md:flex"
-          >
+          <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => {
               const active = isActive(pathname, link.href);
               return (
@@ -219,27 +217,36 @@ export default function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="hidden items-center gap-1 md:flex">
+
+
+
+              <div className="hidden items-center gap-2 md:flex">
+                {/* Sign In: quiet text link, underline draws in on hover */}
                 <Link
                   href="/sign-in"
-                  className={buttonVariants({
-                    variant: "ghost",
-                    className: "rounded-full",
-                  })}
+                  className="group relative rounded-full px-4 py-2 text-sm font-medium text-foreground/75 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
                 >
                   Sign In
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-4 bottom-1 h-px origin-left scale-x-0 bg-primary motion-safe:transition-transform motion-safe:duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                  />
                 </Link>
+
+                {/* Sign Up: tactile gradient pill with a light sheen on hover */}
                 <Link
                   href="/sign-up"
-                  className={buttonVariants({
-                    className:
-                      "group rounded-full bg-brand-gradient px-5 text-white shadow-[0_8px_20px_-10px_#047857] hover:opacity-90",
-                  })}
+                  className="group relative inline-flex h-10 items-center overflow-hidden rounded-full bg-brand-gradient px-6 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_10px_24px_-12px_#047857] ring-1 ring-[#064E3B]/40 outline-none motion-safe:transition-all motion-safe:duration-200 hover:-translate-y-px hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_14px_28px_-12px_#047857] focus-visible:ring-2 focus-visible:ring-ring active:translate-y-0 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.25)]"
                 >
-                  Sign Up
-                  <ArrowRight className="size-4 transition-transform motion-safe:group-hover:translate-x-0.5" />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-white/25 motion-safe:transition-transform motion-safe:duration-700 group-hover:translate-x-[420%]"
+                  />
+                  <span className="relative">Sign Up</span>
                 </Link>
               </div>
+
+              
             )}
 
             {/* Hamburger (mobile) */}

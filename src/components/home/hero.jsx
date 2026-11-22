@@ -24,7 +24,7 @@ export default function Hero() {
           Repair &middot; Track &middot; Pay after service
         </p>
 
-        <h1 className="mt-5 font-display text-6xl font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-[5.5rem]">
+        <h1 className="mt-5 font-display text-[3.25rem] font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-[5.5rem]">
           {lines.map((line, li) => (
             <span key={li} className="block">
               {line.words.map((word) => {
