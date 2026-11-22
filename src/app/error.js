@@ -4,11 +4,25 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Wrench } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { startTransition } from "react";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Error({ error, reset }) {
   useEffect(() => {
     console.error(error);
   }, [error]);
+
+  const router = useRouter();
+  function handleRetry() {
+    startTransition(() => {
+      router.refresh();
+      reset();
+    });
+  }
+
+
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-16">
@@ -29,7 +43,7 @@ export default function Error({ error, reset }) {
           </p>
         )}
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button size="lg" onClick={() => reset()}>
+          <Button size="lg" onClick={handleRetry}>
             Try Again
           </Button>
           <Link
