@@ -80,7 +80,7 @@ function ProfileForm({ user, refetch }) {
       {/* Photo card */}
       <div className="flex flex-col items-center rounded-xl border bg-card p-6 text-center lg:col-span-1">
         <Avatar className="size-28">
-          <AvatarImage src={shownImage} alt="" />
+          <AvatarImage src={shownImage} alt="" referrerPolicy="no-referrer" />
           <AvatarFallback className="text-3xl">
             {(user.name || "?").charAt(0).toUpperCase()}
           </AvatarFallback>

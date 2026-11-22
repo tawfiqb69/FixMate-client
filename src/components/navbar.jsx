@@ -113,7 +113,7 @@ export default function Navbar() {
                 }
               >
                 <Avatar>
-                  <AvatarImage src={user.image || undefined} alt={user.name} />
+                  <AvatarImage src={user.image || undefined} alt={user.name} referrerPolicy="no-referrer" />
                   <AvatarFallback>{initial}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>

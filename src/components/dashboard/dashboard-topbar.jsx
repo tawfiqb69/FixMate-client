@@ -50,7 +50,7 @@ function RingAvatar({ user, size = "size-8" }) {
     <span className="rounded-full bg-brand-gradient p-0.5">
       <span className="block rounded-full bg-background p-0.5">
         <Avatar className={size}>
-          <AvatarImage src={user?.image || undefined} alt="" />
+          <AvatarImage src={user?.image || undefined} alt="" referrerPolicy="no-referrer" />
           <AvatarFallback>
             {(user?.name || "?").charAt(0).toUpperCase()}
           </AvatarFallback>

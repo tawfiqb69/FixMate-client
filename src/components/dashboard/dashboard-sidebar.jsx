@@ -115,7 +115,7 @@ export default function DashboardSidebar({
       {/* Profile summary */}
       <div className={cn("flex items-center gap-3 border-t p-3", collapsed && "lg:justify-center")}>
         <Avatar className="size-9 shrink-0">
-          <AvatarImage src={user?.image || undefined} alt="" />
+          <AvatarImage src={user?.image || undefined} alt="" referrerPolicy="no-referrer" />
           <AvatarFallback>{(user?.name || "?").charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className={cn("min-w-0", hideText)}>

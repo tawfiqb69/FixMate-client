@@ -95,7 +95,7 @@ export default function AdminUsersPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <Avatar className="size-9">
-                          <AvatarImage src={u.image || undefined} alt="" />
+                          <AvatarImage src={u.image || undefined} alt="" referrerPolicy="no-referrer" />
                           <AvatarFallback>{(u.name || "?").charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <span className="font-medium">
