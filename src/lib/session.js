@@ -1,9 +1,27 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
+import { resetMongoClient } from "./db";
+
+function isMongoClosed(err) {
+  const text = `${err?.message || ""} ${err?.cause?.name || ""} ${err?.cause?.message || ""} ${err?.body?.code || ""}`;
+  return (
+    text.includes("Topology is closed") ||
+    text.includes("MongoTopologyClosedError") ||
+    text.includes("FAILED_TO_GET_SESSION")
+  );
+}
 
 export async function getServerSession() {
-  return auth.api.getSession({ headers: await headers() });
+  const h = await headers();
+  try {
+    return await auth.api.getSession({ headers: h });
+  } catch (err) {
+    if (!isMongoClosed(err)) throw err;
+    // The Mongo connection was dead: use a fresh client and try once more
+    resetMongoClient();
+    return auth.api.getSession({ headers: h });
+  }
 }
 
 // Logged-in users only. Others go to /sign-in.
