@@ -127,7 +127,7 @@ export default function SignUpPage() {
             {roles.map(({ value, hint }) => (
               <label
                 key={value}
-                className={`cursor-pointer rounded-xl border p-4 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring ${
+                className={`cursor-pointer rounded-xl border p-4 transition-colors has-focus-visible:ring-2 has-focus-visible:ring-ring ${
                   form.role === value
                     ? "border-primary bg-accent"
                     : "hover:border-primary/40"
