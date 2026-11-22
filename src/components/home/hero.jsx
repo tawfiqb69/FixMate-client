@@ -3,43 +3,52 @@ import { Search } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import HeroVisual from "@/components/home/hero-visual";
 
-const words = [
-  "Broken",
-  "device?",
-  "Get",
-  "it",
-  "fixed",
-  "by",
-  "verified",
-  "technicians",
+const lines = [
+  { words: ["Fixed", "first."], highlight: false },
+  { words: ["Paid", "after."], highlight: true },
 ];
-const highlightFrom = 6;
+
+const assurances = [
+  { n: "01", text: "Verified technicians" },
+  { n: "02", text: "Every step tracked" },
+  { n: "03", text: "Pay after the job" },
+];
 
 export default function Hero() {
+  let index = 0;
+
   return (
-    <section className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
+    <section className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-20">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-          Repair · Track · Pay after service
+          Repair &middot; Track &middot; Pay after service
         </p>
 
-        <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-          {words.map((word, i) => (
-            <span
-              key={i}
-              className={`mr-[0.25em] inline-block motion-safe:animate-word-in ${
-                i >= highlightFrom ? "text-primary" : ""
-              }`}
-              style={{ animationDelay: `${i * 90}ms` }}
-            >
-              {word}
+        <h1 className="mt-5 font-display text-6xl font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-[5.5rem]">
+          {lines.map((line, li) => (
+            <span key={li} className="block">
+              {line.words.map((word) => {
+                const delay = index++ * 120;
+                return (
+                  <span key={word}>
+                    <span
+                      className={`inline-block motion-safe:animate-word-in ${
+                        line.highlight ? "text-primary" : ""
+                      }`}
+                      style={{ animationDelay: `${delay}ms` }}
+                    >
+                      {word}
+                    </span>{" "}
+                  </span>
+                );
+              })}
             </span>
           ))}
         </h1>
 
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          Tell us what is wrong, choose a technician, and follow every step of
-          the repair. You pay only after the job is done.
+          Book a verified technician for your phone, laptop or home appliance,
+          follow every step of the repair, and pay only when the job is done.
         </p>
 
         <form
@@ -64,7 +73,7 @@ export default function Hero() {
           </button>
         </form>
 
-        <div className="mt-6">
+        <div className="mt-5">
           <Link
             href="/services"
             className={buttonVariants({ variant: "outline", size: "lg" })}
@@ -72,6 +81,15 @@ export default function Hero() {
             Browse Services
           </Link>
         </div>
+
+        <ul className="mt-9 grid max-w-xl grid-cols-3 gap-4 border-t pt-5">
+          {assurances.map((a) => (
+            <li key={a.n}>
+              <span className="font-mono text-[11px] text-primary">{a.n}</span>
+              <p className="mt-1 text-sm font-medium leading-snug">{a.text}</p>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <HeroVisual />
